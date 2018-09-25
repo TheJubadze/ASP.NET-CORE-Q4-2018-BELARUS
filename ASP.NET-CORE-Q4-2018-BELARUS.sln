@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.UnitTests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{A6F097FC-4FDD-48C6-8E77-A825E3D1B351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core\Core.csproj", "{F50152AC-F55A-4FFC-B024-8D74476B0A0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{1F1223D8-CC7E-4095-ADD3-42ADE318229C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{A6F097FC-4FDD-48C6-8E77-A825E3D1B351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6F097FC-4FDD-48C6-8E77-A825E3D1B351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6F097FC-4FDD-48C6-8E77-A825E3D1B351}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F50152AC-F55A-4FFC-B024-8D74476B0A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F50152AC-F55A-4FFC-B024-8D74476B0A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F50152AC-F55A-4FFC-B024-8D74476B0A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F50152AC-F55A-4FFC-B024-8D74476B0A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F1223D8-CC7E-4095-ADD3-42ADE318229C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F1223D8-CC7E-4095-ADD3-42ADE318229C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F1223D8-CC7E-4095-ADD3-42ADE318229C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F1223D8-CC7E-4095-ADD3-42ADE318229C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
