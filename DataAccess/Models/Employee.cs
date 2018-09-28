@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class Employees
+    public partial class Employee
     {
-        public Employees()
+        public Employee()
         {
-            EmployeeTerritories = new HashSet<EmployeeTerritories>();
-            InverseReportsToNavigation = new HashSet<Employees>();
-            Orders = new HashSet<Orders>();
+            EmployeeTerritories = new HashSet<EmployeeTerritory>();
+            InverseReportsToNavigation = new HashSet<Employee>();
+            Orders = new HashSet<Order>();
         }
 
         public int EmployeeId { get; set; }
@@ -31,9 +31,9 @@ namespace DataAccess.Models
         public int? ReportsTo { get; set; }
         public string PhotoPath { get; set; }
 
-        public Employees ReportsToNavigation { get; set; }
-        public ICollection<EmployeeTerritories> EmployeeTerritories { get; set; }
-        public ICollection<Employees> InverseReportsToNavigation { get; set; }
-        public ICollection<Orders> Orders { get; set; }
+        public Employee ReportsToNavigation { get; set; }
+        public ICollection<EmployeeTerritory> EmployeeTerritories { get; set; }
+        public ICollection<Employee> InverseReportsToNavigation { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

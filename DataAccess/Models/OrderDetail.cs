@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataAccess.Models
+﻿namespace DataAccess.Models
 {
-    public partial class OrderDetails
+    public partial class OrderDetail
     {
         public int OrderId { get; set; }
         public int ProductId { get; set; }
@@ -11,7 +8,7 @@ namespace DataAccess.Models
         public short Quantity { get; set; }
         public float Discount { get; set; }
 
-        public Orders Order { get; set; }
-        public Products Product { get; set; }
+        public Order Order { get; set; }
+        public Product Product { get; set; }
     }
 }

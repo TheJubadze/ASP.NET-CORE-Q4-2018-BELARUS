@@ -2,7 +2,7 @@
 
 namespace Core.Repositories
 {
-    public interface ICategoryRepository : IRepository<Categories>
+    public interface ICategoryRepository : IRepository<Category>
     {
     }
 }
