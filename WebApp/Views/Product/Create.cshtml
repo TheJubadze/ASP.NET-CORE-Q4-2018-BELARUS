@@ -1,0 +1,17 @@
+﻿@model WebApp.ViewModels.ProductCreateViewModel
+
+<h1>Create</h1>
+
+<form method="post">
+    <input asp-for="Product.ProductName"/>
+
+    <select asp-for="Product.CategoryId" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))">
+        <option>Please select one</option>
+    </select>
+
+    <select asp-for="Product.SupplierId" asp-items="@(new SelectList(Model.Suppliers, "SupplierId", "CompanyName"))">
+        <option>Please select one</option>
+    </select>
+
+    <input type="submit" name="save" title="Save"/>
+</form>

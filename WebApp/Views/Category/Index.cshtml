@@ -1,0 +1,20 @@
+﻿@model WebApp.ViewModels.CategoryIndexViewModel
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+<table>
+    @foreach (var cat in Model.Categories)
+    {
+        <tr>
+            <td>@cat.CategoryId</td>
+            <td>@cat.CategoryName</td>
+        </tr>
+    }
+</table>
+</body>
+</html>

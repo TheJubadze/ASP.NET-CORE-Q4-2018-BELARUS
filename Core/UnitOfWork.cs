@@ -10,10 +10,15 @@ namespace Core
         public UnitOfWork(NorthwindContext context)
         {
             _context = context;
+            Suppliers = new SupplierRepository(_context);
             Categories = new CategoryRepository(_context);
+            Products = new ProductRepository(_context);
         }
 
+        public ISupplierRepository Suppliers { get; }
         public ICategoryRepository Categories { get; }
+        public IProductRepository Products { get; }
+
         public int Complete()
         {
             return _context.SaveChanges();

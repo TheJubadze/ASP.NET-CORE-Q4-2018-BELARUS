@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Core;
+﻿using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,23 +24,19 @@ namespace WebApp
             var connStr = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IUnitOfWork unitOfWork)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
-            var u = unitOfWork.Categories.GetAll().Aggregate(string.Empty, (s, x) => $"{s}\n{x.Description}");
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync($"Hello World! {u}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

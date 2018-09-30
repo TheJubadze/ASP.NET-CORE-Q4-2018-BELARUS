@@ -6,6 +6,7 @@ namespace Core.Repositories
     {
         public CategoryRepository(NorthwindContext context) : base(context)
         {
+            
         }
     }
 }

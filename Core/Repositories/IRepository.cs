@@ -7,7 +7,7 @@ namespace Core.Repositories
     public interface IRepository<TEntity> where TEntity : class
     {
         TEntity Get(int id);
-        IEnumerable<TEntity> GetAll();
+        IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes);
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
         void Add(TEntity entity);

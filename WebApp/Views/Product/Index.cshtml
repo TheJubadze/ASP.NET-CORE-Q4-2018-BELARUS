@@ -1,0 +1,25 @@
+@model WebApp.ViewModels.ProductIndexViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+    <table>
+        @foreach (var p in Model.Products)
+        {
+            <tr>
+                <td>@p.ProductId</td>
+                <td>@p.ProductName</td>
+                <td>@p.Category?.CategoryName</td>
+                <td>@p.UnitPrice</td>
+                <td>@p.Supplier?.ContactName</td>
+            </tr>
+        }
+    </table>
+</div>
+</body>
+</html>
