@@ -1,5 +1,6 @@
-﻿using System.Linq;
+﻿using AutoMapper;
 using Core;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using WebApp.ViewModels;
@@ -9,30 +10,29 @@ namespace WebApp.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public ProductController(IConfiguration configuration, IUnitOfWork unitOfWork)
+        private readonly int _productsCount;
+
+        public ProductController(IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            IConfiguration configuration)
         {
-            _configuration = configuration;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+
+            var cfg = configuration.GetSection("RepositorySettings");
+            _productsCount = cfg.GetValue<int>("ProductsCountMax");
         }
 
         public IActionResult Index()
         {
-            var cfg = _configuration.GetSection("RepositorySettings");
-            var count = cfg.GetValue<int>("ProductsCountMax");
-            var products = count > 0
-                ? _unitOfWork.Products
-                    .GetAll(x => x.Category, x => x.Supplier)
-                    .Take(count)
-                : _unitOfWork.Products
-                    .GetAll(x => x.Category, x => x.Supplier);
-
-            var model = new ProductIndexViewModel { Products = products };
+            var model = new ProductIndexViewModel { Products = _unitOfWork.Products.GetFirst(_productsCount) };
             
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new ProductCreateViewModel
@@ -42,6 +42,17 @@ namespace WebApp.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Create(ProductCreateViewModel createViewModel)
+        {
+            _unitOfWork.Products.Add(_mapper.Map<Product>(createViewModel.Product));
+            _unitOfWork.Complete();
+
+            var model = new ProductIndexViewModel { Products = _unitOfWork.Products.GetFirst(_productsCount) };
+
+            return View("Index", model);
         }
     }
 }

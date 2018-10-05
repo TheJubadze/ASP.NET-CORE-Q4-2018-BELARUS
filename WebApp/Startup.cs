@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using AutoMapper;
+using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,7 @@ namespace WebApp
             var connStr = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper();
             services.AddMvc();
         }
 
