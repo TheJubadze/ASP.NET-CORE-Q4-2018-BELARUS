@@ -31,9 +31,10 @@ namespace Core.Repositories
             return _dbSet.Where(predicate);
         }
 
-        public void Add(TEntity entity)
+        public TEntity Add(TEntity entity)
         {
             _dbSet.Add(entity);
+            return entity;
         }
 
         public void AddRange(IEnumerable<TEntity> entities)

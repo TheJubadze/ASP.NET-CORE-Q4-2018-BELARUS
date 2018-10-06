@@ -1,17 +1,31 @@
-﻿@model WebApp.ViewModels.ProductCreateViewModel
+﻿@model WebApp.ViewModels.ProductEditViewModel
 
 <h1>Create</h1>
 
 <form method="post">
-    <input asp-for="Product.ProductName"/>
+    <div>
+        <label asp-for="Product.ProductName"></label>
+        <input asp-for="Product.ProductName"/>
+        <span asp-validation-for="Product.ProductName"></span>
+    </div>
+    <br/>
 
-    <select asp-for="Product.CategoryId" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))">
-        <option>Please select one</option>
-    </select>
+    <div>
+        <label asp-for="Product.Category"></label>
+        <select asp-for="Product.CategoryId" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))">
+            <option>Please select one</option>
+        </select>
+    </div>
+    <br/>
 
-    <select asp-for="Product.SupplierId" asp-items="@(new SelectList(Model.Suppliers, "SupplierId", "CompanyName"))">
-        <option>Please select one</option>
-    </select>
+    <div>
+        <label asp-for="Product.Supplier"></label>
+        <select asp-for="Product.SupplierId" asp-items="@(new SelectList(Model.Suppliers, "SupplierId", "CompanyName"))">
+            <option>Please select one</option>
+        </select>
+    </div>
+    <br/>
 
     <input type="submit" name="save" title="Save"/>
 </form>
+<div asp-validation-summary="ModelOnly"></div>

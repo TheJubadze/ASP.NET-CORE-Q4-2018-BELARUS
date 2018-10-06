@@ -10,7 +10,7 @@ namespace Core.Repositories
         IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes);
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
-        void Add(TEntity entity);
+        TEntity Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
 
         void Delete(TEntity entity);

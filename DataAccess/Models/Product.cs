@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Models
 {
@@ -10,6 +11,9 @@ namespace DataAccess.Models
         }
 
         public int ProductId { get; set; }
+        
+        [Required, MaxLength(128)]
+        [Display(Name = "Product Name")]
         public string ProductName { get; set; }
         public int? SupplierId { get; set; }
         public int? CategoryId { get; set; }

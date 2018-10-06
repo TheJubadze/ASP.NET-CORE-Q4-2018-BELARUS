@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using WebApp.Logger;
 
 namespace WebApp
 {
@@ -24,7 +26,8 @@ namespace WebApp
         {
             var connStr = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ILogger, FileLogger>(l => new FileLogger("log.txt"));
             services.AddAutoMapper();
             services.AddMvc();
         }
@@ -38,6 +41,8 @@ namespace WebApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+            app.UseNodeModules(env.ContentRootPath);
             app.UseMvcWithDefaultRoute();
         }
     }

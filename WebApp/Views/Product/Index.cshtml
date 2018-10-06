@@ -1,12 +1,9 @@
 @model WebApp.ViewModels.ProductIndexViewModel
 
-<!DOCTYPE html>
+@{
+    ViewBag.Title = "Products";
+}
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
 <div>
     <table>
         @foreach (var p in Model.Products)
@@ -22,5 +19,3 @@
     </table>
     <a asp-action="Create">Add a Product</a>
 </div>
-</body>
-</html>

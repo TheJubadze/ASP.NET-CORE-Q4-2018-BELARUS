@@ -8,7 +8,7 @@ namespace WebApp.Mapper
     {
         public DomainProfile()
         {
-            CreateMap<ProductCreateViewModel, Product>();
+            CreateMap<ProductEditViewModel, Product>();
         }
     }
 }
