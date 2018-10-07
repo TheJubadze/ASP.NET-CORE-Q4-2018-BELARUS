@@ -15,6 +15,7 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Title = "Categories";
             var model = new CategoryIndexViewModel
             {
                 Categories = _unitOfWork.Categories.GetAll()

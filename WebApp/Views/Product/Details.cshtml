@@ -1,5 +1,11 @@
-@model DataAccess.Models.Product
+@model Product
 
-<h1>@Model.ProductName</h1>
-<div>@Model.UnitPrice</div>
-<div>@Model.QuantityPerUnit</div>
+<div><h2>@Model.ProductName</h2></div>
+<div><label asp-for="@Model.UnitPrice"></label>: @Model.UnitPrice</div>
+<div><label asp-for="@Model.Category.CategoryName"></label>: @Model.Category?.CategoryName</div>
+<div><label asp-for="@Model.Supplier.ContactName"></label>: @Model.Supplier?.ContactName</div>
+<div><label asp-for="@Model.QuantityPerUnit"></label>: @Model.QuantityPerUnit</div>
+<div><label asp-for="@Model.UnitsInStock"></label>: @Model.UnitsInStock</div>
+<div><label asp-for="@Model.UnitsOnOrder"></label>: @Model.UnitsOnOrder</div>
+<div><label asp-for="@Model.ReorderLevel"></label>: @Model.ReorderLevel</div>
+<div><label asp-for="@Model.Discontinued"></label>: @Model.Discontinued</div>

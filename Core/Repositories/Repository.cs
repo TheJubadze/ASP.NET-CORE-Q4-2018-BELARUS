@@ -42,6 +42,12 @@ namespace Core.Repositories
             _dbSet.AddRange(entities);
         }
 
+        public TEntity Update(TEntity entity)
+        {
+            _dbSet.Update(entity);
+            return entity;
+        }
+
         public void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);

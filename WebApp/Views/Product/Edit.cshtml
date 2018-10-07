@@ -1,9 +1,10 @@
 ﻿@model ProductEditViewModel
 
-<h1>New Product</h1>
+<h1>Edit Product</h1>
 
 <form method="post">
     <partial name="_EditProductFields.cshtml" for="@Model" />
+    <input type="hidden" asp-for="Product.ProductId" />
     <input type="submit" name="save" title="Save" />
 </form>
 <div asp-validation-summary="All"></div>

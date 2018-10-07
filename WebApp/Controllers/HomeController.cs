@@ -4,9 +4,13 @@ namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private const string WelcomeMsg = "Welcome!";
+
         public IActionResult Index()
         {
-            return View();
+            ViewBag.Title = "Home";
+
+            return View((object)WelcomeMsg);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Models
 {
@@ -10,7 +11,11 @@ namespace DataAccess.Models
         }
 
         public int SupplierId { get; set; }
+
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
+
+        [Display(Name = "Contact Name")]
         public string ContactName { get; set; }
         public string ContactTitle { get; set; }
         public string Address { get; set; }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core;
-using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -44,8 +43,8 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation(
-                "ProductController Index opening!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            ViewBag.Title = "Products";
+            _logger.LogInformation("Products list");
             var model = new ProductIndexViewModel {Products = _unitOfWork.Products.GetFirst(_productsCount)};
 
             return View(model);
@@ -54,6 +53,8 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.Title = "New Product";
+
             return View(ProductEditViewModel);
         }
 
@@ -61,24 +62,48 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProductEditViewModel createViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                var product = _unitOfWork.Products.Add(_mapper.Map<Product>(createViewModel.Product));
-                _unitOfWork.Complete();
-
-                return RedirectToAction(nameof(Details), new {id = product.ProductId});
-            }
-            else
-            {
+            if (!ModelState.IsValid) 
                 return View(ProductEditViewModel);
-            }
+
+            var product = _unitOfWork.Products.Add(createViewModel.Product);
+            _unitOfWork.Complete();
+
+            return RedirectToAction(nameof(Details), new {id = product.ProductId});
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Title = "Edit Product";
+            _productEditViewModel.Product = _unitOfWork.Products.Get(id);
+
+            return View(ProductEditViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ProductEditViewModel createViewModel)
+        {
+            if (!ModelState.IsValid) 
+                return View(ProductEditViewModel);
+
+            var product = _unitOfWork.Products.Update(createViewModel.Product);
+            _unitOfWork.Complete();
+
+            return RedirectToAction(nameof(Details), new {id = product.ProductId});
         }
 
         [HttpGet]
         public IActionResult Details(int id)
         {
             var product = _unitOfWork.Products.Get(id);
+            
+            if (product.CategoryId.HasValue)
+                product.Category = _unitOfWork.Categories.Get(product.CategoryId.Value);
 
+            if (product.SupplierId.HasValue)
+                product.Supplier = _unitOfWork.Suppliers.Get(product.SupplierId.Value);
+                
             return View(product);
         }
     }

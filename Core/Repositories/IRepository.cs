@@ -13,6 +13,8 @@ namespace Core.Repositories
         TEntity Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
 
+        TEntity Update(TEntity entity);
+
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
     }

@@ -20,12 +20,21 @@
               asp-fallback-test-value="absolute" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
     </environment>
 
 </head>
 <body>
-<div>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Home</a>
+            <a class="navbar-brand" href="/Category">Categories</a>
+            <a class="navbar-brand" href="/Product">Products</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
     @RenderBody()
 </div>
 </body>

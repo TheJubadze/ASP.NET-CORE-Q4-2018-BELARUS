@@ -12,8 +12,10 @@ namespace Core.Repositories
         {
         }
 
-        public IEnumerable<Product> GetFirst(int count, params Expression<Func<Product, object>>[] includes)
+        public IEnumerable<Product> GetFirst(int count)
         {
+            Expression<Func<Product, object>> [] includes = { x => x.Category, x => x.Supplier };
+
             return count > 0 ? GetAll(includes).Take(count) : GetAll(includes);
         }
     }
