@@ -32,7 +32,7 @@ namespace Core.UnitTests
         public Mock<NorthwindContext> DbContextMock { get; }
         public Mock<DbSet<Category>> CategoryDbSetMock { get; }
 
-        private Mock<DbSet<TEntity>> GetDbSetMock<TEntity>(IQueryable<TEntity> entities) where TEntity : class
+        private static Mock<DbSet<TEntity>> GetDbSetMock<TEntity>(IQueryable<TEntity> entities) where TEntity : class
         {
             var mockSet = new Mock<DbSet<TEntity>>();
             mockSet.As<IQueryable<TEntity>>().Setup(x => x.Provider).Returns(entities.Provider);
