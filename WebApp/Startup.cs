@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebApp.Logger;
+using WebApp.Services;
 
 namespace WebApp
 {
@@ -27,6 +28,7 @@ namespace WebApp
             var connStr = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddScoped<ILogger, FileLogger>(_ => new FileLogger("log.txt"));
             services.AddAutoMapper();
             services.AddMvc();

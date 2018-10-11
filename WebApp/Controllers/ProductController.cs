@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WebApp.Services;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -28,16 +28,13 @@ namespace WebApp.Controllers
 
         public ProductController(IUnitOfWork unitOfWork,
             IMapper mapper,
-            IConfiguration configuration,
+            IConfigurationService configurationService,
             ILogger logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
-
-            var cfg = configuration.GetSection("RepositorySettings");
-            _productsCount = cfg.GetValue<int>("ProductsCountMax");
-
+            _productsCount = configurationService.ProductsCount;
             _productEditViewModel = new ProductEditViewModel();
         }
 
