@@ -3,6 +3,7 @@ using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,7 +54,13 @@ namespace WebApp
             app.UseNodeModules(env.ContentRootPath);
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
             app.ConfigureExceptionHandler(logger);
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(BuildRoutes);
+        }
+
+        private static void BuildRoutes(IRouteBuilder routeBuilder)
+        {
+            routeBuilder.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            routeBuilder.MapRoute("images", "images/{id?}", defaults: new {controller = "Category", action = "Image"});
         }
     }
 }

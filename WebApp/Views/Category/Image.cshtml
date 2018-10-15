@@ -1,0 +1,9 @@
+﻿@model CategoryEditViewModel
+@{ Layout = null; }
+
+@{
+    var base64 = Convert.ToBase64String(Model.Category.Picture);
+    var imgSrc = String.Format("data:image/bmp;base64,{0}", base64);
+}
+
+<img src="@imgSrc" />

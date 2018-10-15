@@ -38,11 +38,17 @@ namespace WebApp.Controllers
                 Category = _unitOfWork.Categories.Get(id)
             };
 
-            var newArray = new byte[model.Category.Picture.Length - PictureBytesToSkip];
-            Array.Copy(model.Category.Picture, PictureBytesToSkip, newArray, 0, newArray.Length);
-            model.Category.Picture = newArray;
-            
+            model.Category.Picture = GetPicture(id);
+
             return View(model);
+        }
+
+        private byte[] GetPicture(int id)
+        {
+            var category = _unitOfWork.Categories.Get(id);
+            var newArray = new byte[category.Picture.Length - PictureBytesToSkip];
+            Array.Copy(category.Picture, PictureBytesToSkip, newArray, 0, newArray.Length);
+            return newArray;
         }
 
         [HttpPost]
@@ -68,6 +74,14 @@ namespace WebApp.Controllers
             }
 
             return RedirectToAction(nameof(Edit), new {id = category.CategoryId});
+        }
+
+        [HttpGet]
+        public IActionResult Image(int id)
+        {
+            var model = new CategoryEditViewModel {Category = _unitOfWork.Categories.Get(id)};
+            model.Category.Picture = GetPicture(id);
+            return View(model);
         }
     }
 }

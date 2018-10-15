@@ -25,6 +25,9 @@
     <Content Update="Views\Category\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Category\Image.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Category\_EditCategoryFields.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
