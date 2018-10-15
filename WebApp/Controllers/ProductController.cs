@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Core;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApp.Services;
@@ -93,7 +95,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            var product = _unitOfWork.Products.Get(id);
+            var product = _unitOfWork.Products.Get(id) ?? throw new ArgumentOutOfRangeException();
             
             if (product.CategoryId.HasValue)
                 product.Category = _unitOfWork.Categories.Get(product.CategoryId.Value);

@@ -1,5 +1,5 @@
+using System;
 using System.Linq;
-using AutoFixture;
 using AutoMapper;
 using Core;
 using Core.UnitTests;
@@ -18,17 +18,18 @@ namespace WebApp.UnitTests.ControllersTests
     {
         private const int CountOfProductsPerPage = 3;
 
+        private readonly IMockService _mockService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly Mock<IConfigurationService> _configurationMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILogger> _loggerMock;
         
-        //private readonly Fixture _fixture = new Fixture();
-        
+        private readonly ProductEditViewModel _createViewModel;
+
         public ProductControllerTests()
         {
-            IMockService mockService = new MockService();
-            _unitOfWork = mockService.UnitOfWork;
+            _mockService = new MockService();
+            _unitOfWork = _mockService.UnitOfWork;
 
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger>();
@@ -37,6 +38,13 @@ namespace WebApp.UnitTests.ControllersTests
             _configurationMock
                 .Setup(x => x.ProductsCount)
                 .Returns(CountOfProductsPerPage);
+
+            _createViewModel  = new ProductEditViewModel
+            {
+                Product = new Product(),
+                Categories = _unitOfWork.Categories.GetAll(),
+                Suppliers = _unitOfWork.Suppliers.GetAll()
+            };
         }
 
         [Fact]
@@ -71,23 +79,75 @@ namespace WebApp.UnitTests.ControllersTests
         }        
 
         [Fact]
-        public void Create_Post_Returns_ViewResult()
+        public void Create_Post_Redirects_To_Details()
         {
             //Arrange
             var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
-            var createViewModel = new ProductEditViewModel()
-            {
-                Product = new Product(),
-                Categories = _unitOfWork.Categories.GetAll(),
-                Suppliers = _unitOfWork.Suppliers.GetAll()
-            };
+
 
             //Act
-            var result = productController.Create(createViewModel);
+            var result = productController.Create(_createViewModel);
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Details", viewResult.ActionName);
         }
+
+        [Fact]
+        public void Edit_Get_Returns_ViewResult()
+        {
+            //Arrange
+            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+
+            //Act
+            var result = productController.Edit(1);
+
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<ProductEditViewModel>(viewResult.Model);
+            Assert.Equal(CountOfProductsPerPage, model.Categories.Count());
+            Assert.Equal(CountOfProductsPerPage, model.Suppliers.Count());
+        }    
+
+        [Fact]
+        public void Edit_Post_Redirects_To_Details()
+        {
+            //Arrange
+            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+
+
+            //Act
+            var result = productController.Edit(_createViewModel);
+
+            //Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Details", viewResult.ActionName);
+        }
+
+        [Fact]
+        public void Details_Returns_ViewResult()
+        {
+            //Arrange
+            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            _mockService.ProductDbSetMock.Setup(x => x.Find(It.IsAny<int>())).Returns(new Product());
+
+            //Act
+            var result = productController.Details(1);
+
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<Product>(viewResult.Model);
+        }
+
+        [Fact]
+        public void Details_Throws_ArgumentOutOfRangeException()
+        {
+            //Arrange
+            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+
+            //Act
+            //Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => productController.Details(1));
+        }   
     }
 }
