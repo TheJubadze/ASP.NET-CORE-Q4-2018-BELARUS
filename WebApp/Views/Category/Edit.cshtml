@@ -1,0 +1,18 @@
+﻿@model CategoryEditViewModel
+
+@{
+    var base64 = Convert.ToBase64String(Model.Category.Picture);
+    var imgSrc = String.Format("data:image/bmp;base64,{0}", base64);
+}
+
+<img src="@imgSrc" />
+
+<form method="post" enctype="multipart/form-data" asp-controller="Category" asp-action="Edit">
+    <partial name="_EditCategoryFields.cshtml" for="@Model" />
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="Upload" />
+        </div>
+    </div>
+    <input type="hidden" asp-for="Category.CategoryId" />
+</form>

@@ -5,7 +5,9 @@
     {
         <tr>
             <td>@cat.CategoryId.</td>
-            <td>@cat.CategoryName</td>
+            <td>
+                <a asp-action="Edit" asp-route-id=@cat.CategoryId>@cat.CategoryName</a>
+            </td>
         </tr>
     }
 </table>

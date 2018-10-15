@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoMapper;
 using Core;
-using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApp.Services;

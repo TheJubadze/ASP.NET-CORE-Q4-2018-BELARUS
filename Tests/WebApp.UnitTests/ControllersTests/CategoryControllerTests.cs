@@ -1,6 +1,7 @@
 using System.Linq;
 using Core;
 using Core.UnitTests;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Controllers;
 using WebApp.ViewModels;
@@ -32,5 +33,20 @@ namespace WebApp.UnitTests.ControllersTests
             var model = Assert.IsAssignableFrom<CategoryIndexViewModel>(viewResult.Model);
             Assert.Equal(3, model.Categories.Count());
         }
+
+        [Fact]
+        public void Edit_Get_Returns_ViewResult()
+        {
+            //Arrange
+            var categoryController = new CategoryController(_unitOfWork);
+
+            //Act
+            var result = categoryController.Edit(1);
+
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<CategoryEditViewModel>(viewResult.Model);
+            Assert.IsType<Category>(model.Category);
+        }    
     }
 }
