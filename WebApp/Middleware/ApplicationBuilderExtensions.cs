@@ -40,7 +40,7 @@ namespace Microsoft.AspNetCore.Builder
                     { 
                         logger.LogError($"Something went wrong: {contextFeature.Error}");
  
-                        await context.Response.WriteAsync(new ErrorDetails()
+                        await context.Response.WriteAsync(new ErrorDetails
                         {
                             StatusCode = context.Response.StatusCode,
                             Message = "Internal Server Error."
