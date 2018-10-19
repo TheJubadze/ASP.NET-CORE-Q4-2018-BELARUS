@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebApp.Logger;
+using WebApp.Middleware;
 using WebApp.Services;
 
 namespace WebApp
@@ -50,6 +51,7 @@ namespace WebApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<CachingMiddleware>();
             app.UseStaticFiles();
             app.UseNodeModules(env.ContentRootPath);
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
