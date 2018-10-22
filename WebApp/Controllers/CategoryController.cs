@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Core;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Common;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -79,9 +80,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Image(int id)
         {
-            var model = new CategoryEditViewModel {Category = _unitOfWork.Categories.Get(id)};
-            model.Category.Picture = GetPicture(id);
-            return View(model);
+            return File(new MemoryStream(GetPicture(id)), Constants.CONTENT_TYPE_IMAGE);
         }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Controllers;
 using WebApp.ViewModels;
 using Xunit;
-using AutoFixture;
 using Moq;
 
 namespace WebApp.UnitTests.ControllersTests
@@ -14,7 +13,6 @@ namespace WebApp.UnitTests.ControllersTests
     public class CategoryControllerTests
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly Fixture _fixture;
 
         public CategoryControllerTests()
         {
@@ -42,10 +40,12 @@ namespace WebApp.UnitTests.ControllersTests
         {
             //Arrange
             var uow = new Mock<IUnitOfWork>();
-            var cat = new Category(); //_fixture.Create<Category>();
+            var cat = new Category
+            {
+                Picture = new byte[128]
+            }; 
             uow.Setup(x => x.Categories.Get(It.IsAny<int>())).Returns(cat);
             var categoryController = new CategoryController(uow.Object);
-            var id = _unitOfWork.Categories.GetAll().First().CategoryId;
 
             //Act
             var result = categoryController.Edit(1);
