@@ -6,6 +6,7 @@
     "ProductsCountMax": 4
   },
   "Cache": {
-    "Path":  "Cache\\" 
+    "Path":  "Cache\\",
+    "Capacity":  "5" 
   } 
 }
