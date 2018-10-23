@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json.mac.tpl" />
+    <None Remove="appsettings.json.work.tpl" />
     <None Remove="log.txt" />
   </ItemGroup>
 
