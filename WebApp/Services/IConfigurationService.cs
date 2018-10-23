@@ -4,5 +4,6 @@
     {
         int ProductsCount { get; }
         string CachePath { get; }
+        int CacheCapacity { get; }
     }
 }

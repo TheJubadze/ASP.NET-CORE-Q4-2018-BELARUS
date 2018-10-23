@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace WebApp.ViewModels

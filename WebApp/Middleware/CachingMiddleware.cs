@@ -47,17 +47,18 @@ namespace WebApp.Middleware
 
                     await _next(context);
 
-                    if (context.Response.ContentType == Constants.CONTENT_TYPE_IMAGE)
+                    if (context.Response.ContentType == Constants.CONTENT_TYPE_IMAGE
+                        && configurationService.CacheCapacity > Directory.GetFiles(configurationService.CachePath).Length)
                     {
                         using (var file = new FileStream(filePath, FileMode.Create))
                         {
                             memStream.Position = 0;
                             await memStream.CopyToAsync(file);
-
-                            memStream.Position = 0;
-                            await memStream.CopyToAsync(originalBody);
                         }
                     }
+
+                    memStream.Position = 0;
+                    await memStream.CopyToAsync(originalBody);
                 }
             }
             finally
