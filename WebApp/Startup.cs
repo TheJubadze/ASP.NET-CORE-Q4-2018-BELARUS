@@ -28,11 +28,16 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             var connStr = _configuration.GetConnectionString("DefaultConnection");
+
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
+            
+            services.AddSingleton<IConfigurationService, ConfigurationService>();
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddScoped<ILogger, FileLogger>(_ => new FileLogger("log.txt"));
+            
             services.AddAutoMapper();
+            
             services.AddMvc();
         }
 

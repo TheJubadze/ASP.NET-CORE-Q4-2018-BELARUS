@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using AutoMapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Common;
@@ -11,11 +12,13 @@ namespace WebApp.Controllers
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private const int PictureBytesToSkip = 78;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -40,13 +43,16 @@ namespace WebApp.Controllers
             };
 
             model.Category.Picture = GetPicture(id);
-
+            
             return View(model);
         }
 
         private byte[] GetPicture(int id)
         {
             var category = _unitOfWork.Categories.Get(id);
+            if (category.Picture == null)
+                return null;
+
             var newArray = new byte[category.Picture.Length - PictureBytesToSkip];
             Array.Copy(category.Picture, PictureBytesToSkip, newArray, 0, newArray.Length);
             return newArray;
@@ -55,9 +61,10 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
         {
-            var category = categoryEditViewModel.Category;
+            var category = _unitOfWork.Categories.Get(categoryEditViewModel.Category.CategoryId);
+            _mapper.Map(categoryEditViewModel, category);
 
-            if (categoryEditViewModel.File.Length > 0)
+            if (categoryEditViewModel.File != null && categoryEditViewModel.File.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {
@@ -69,10 +76,11 @@ namespace WebApp.Controllers
                     Array.Copy(newPic, 0, picture, PictureBytesToSkip, newPic.Length);
 
                     category.Picture = picture;
-                    category = _unitOfWork.Categories.Update(category);
-                    _unitOfWork.Complete();
                 }
             }
+
+            category = _unitOfWork.Categories.Update(category);
+            _unitOfWork.Complete();
 
             return RedirectToAction(nameof(Edit), new {id = category.CategoryId});
         }

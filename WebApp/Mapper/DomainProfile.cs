@@ -9,6 +9,10 @@ namespace WebApp.Mapper
         public DomainProfile()
         {
             CreateMap<ProductEditViewModel, Product>();
+            
+            CreateMap<CategoryEditViewModel, Category>()
+                .ForMember(dest => dest.CategoryName, opts => opts.MapFrom(src => src.Category.CategoryName))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Category.Description));
         }
     }
 }

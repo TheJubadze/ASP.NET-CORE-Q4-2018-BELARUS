@@ -1,7 +1,7 @@
 ﻿@model CategoryEditViewModel
 
 @{
-    var base64 = Convert.ToBase64String(Model.Category.Picture);
+    var base64 = Convert.ToBase64String(Model.Category.Picture ?? new byte[78]);
     var imgSrc = String.Format("data:image/bmp;base64,{0}", base64);
 }
 

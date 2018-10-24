@@ -1,4 +1,5 @@
 using System.Linq;
+using AutoMapper;
 using Core;
 using Core.UnitTests;
 using DataAccess.Models;
@@ -13,18 +14,20 @@ namespace WebApp.UnitTests.ControllersTests
     public class CategoryControllerTests
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         public CategoryControllerTests()
         {
             IMockService mockService = new MockService();
             _unitOfWork = mockService.UnitOfWork;
+            _mapper = new Mock<IMapper>().Object;
         }
 
         [Fact]
         public void Index_Returns_A_ViewResult_And_List_Of_Categories()
         {
             //Arrange
-            var categoryController = new CategoryController(_unitOfWork);
+            var categoryController = new CategoryController(_unitOfWork, _mapper);
 
             //Act
             var result = categoryController.Index();
@@ -45,7 +48,7 @@ namespace WebApp.UnitTests.ControllersTests
                 Picture = new byte[128]
             }; 
             uow.Setup(x => x.Categories.Get(It.IsAny<int>())).Returns(cat);
-            var categoryController = new CategoryController(uow.Object);
+            var categoryController = new CategoryController(uow.Object, _mapper);
 
             //Act
             var result = categoryController.Edit(1);
