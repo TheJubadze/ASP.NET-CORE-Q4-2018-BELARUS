@@ -1,13 +1,16 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebApp.Filters;
 using WebApp.Logger;
 using WebApp.Middleware;
 using WebApp.Services;
@@ -38,7 +41,13 @@ namespace WebApp
             
             services.AddAutoMapper();
             
-            services.AddMvc();
+            Action<MvcOptions> configMvcAction = x => { };
+
+            var isLoggingEnabled = _configuration.GetSection("Logging").GetValue<bool>("ActionLoggingEnabled");
+            if(isLoggingEnabled) 
+                configMvcAction = options => options.Filters.Add(typeof(LoggingFilterAttribute));
+            
+            services.AddMvc(configMvcAction);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

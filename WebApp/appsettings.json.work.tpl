@@ -6,7 +6,11 @@
     "ProductsCountMax": 4
   },
   "Cache": {
-    "Path":  "Cache\\",
-    "Capacity":  "5" 
-  } 
+    "Path": "Cache\\",
+    "Capacity": "5",
+    "LifeTime": "5"
+  },
+  "Logging": {
+    "ActionLoggingEnabled": "true"
+  }
 }
