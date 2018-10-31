@@ -3,6 +3,7 @@ using AutoMapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SmartBreadcrumbs;
 using WebApp.Services;
 using WebApp.ViewModels;
 
@@ -39,6 +40,7 @@ namespace WebApp.Controllers
             _productEditViewModel = new ProductEditViewModel();
         }
 
+        [Breadcrumb("Products")]
         public IActionResult Index()
         {
             ViewBag.Title = "Products";
@@ -49,6 +51,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Create", FromAction = "Index")]
         public IActionResult Create()
         {
             ViewBag.Title = "New Product";
@@ -70,6 +73,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Edit", FromAction = "Index")]
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Edit Product";
@@ -92,6 +96,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Details", FromAction = "Index")]
         public IActionResult Details(int id)
         {
             var product = _unitOfWork.Products.Get(id) ?? throw new ArgumentOutOfRangeException();

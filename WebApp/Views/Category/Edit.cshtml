@@ -5,6 +5,10 @@
     var imgSrc = String.Format("data:image/bmp;base64,{0}", base64);
 }
 
+@section Headers{
+    <breadcrumb></breadcrumb>
+}
+
 <img src="@imgSrc" />
 
 <form method="post" enctype="multipart/form-data" asp-controller="Category" asp-action="Edit">

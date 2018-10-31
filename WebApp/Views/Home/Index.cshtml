@@ -1,5 +1,19 @@
 ﻿@model string
 
 <div>@Model</div>
-<a asp-controller="Category" asp-action="Index">Categories</a><br/>
-<a asp-controller="Product" asp-action="Index">Products</a>
+@*<a asp-controller="Category" asp-action="Index">Categories</a><br/>
+<a asp-controller="Product" asp-action="Index">Products</a>*@
+
+@section Headers
+{
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/Category">Categories</a>
+                <a class="navbar-brand" href="/Product">Products</a>
+            </div>
+        </div>
+    </nav>
+}
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Liliumbulbiferumflowertop.jpg/220px-Liliumbulbiferumflowertop.jpg"/>

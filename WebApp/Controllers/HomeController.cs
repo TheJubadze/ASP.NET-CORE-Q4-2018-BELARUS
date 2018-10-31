@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartBreadcrumbs;
 
 namespace WebApp.Controllers
 {
@@ -6,6 +7,7 @@ namespace WebApp.Controllers
     {
         private const string WelcomeMsg = "Welcome!";
 
+        [DefaultBreadcrumb("Home")]
         public IActionResult Index()
         {
             ViewBag.Title = "Home";

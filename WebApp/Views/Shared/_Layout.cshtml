@@ -17,7 +17,7 @@
               asp-fallback-href="~/node_modules/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only"
               asp-fallback-test-property="position"
-              asp-fallback-test-value="absolute" />
+              asp-fallback-test-value="absolute"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
@@ -25,17 +25,28 @@
 
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">Home</a>
-            <a class="navbar-brand" href="/Category">Categories</a>
-            <a class="navbar-brand" href="/Product">Products</a>
-        </div>
-    </div>
-</nav>
+
+@if (IsSectionDefined("Headers"))
+{
+    @RenderSection("Headers", required: false)
+}
+else
+{
+    <p>Header should be here</p>
+}
+
 <div class="container">
     @RenderBody()
 </div>
+
+@if (IsSectionDefined("Footers"))
+{
+    @RenderSection("Footers", required: false)
+}
+else
+{
+    <p>Footer should be here</p>
+}
+
 </body>
 </html>

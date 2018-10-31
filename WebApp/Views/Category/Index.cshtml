@@ -1,5 +1,9 @@
 ﻿@model CategoryIndexViewModel
 
+@section Headers{
+    <breadcrumb></breadcrumb>
+}
+
 <table>
     @foreach (var cat in Model.Categories)
     {

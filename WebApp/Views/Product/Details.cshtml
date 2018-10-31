@@ -1,5 +1,9 @@
 @model Product
 
+@section Headers{
+    <breadcrumb></breadcrumb>
+}
+
 <div><h2>@Model.ProductName</h2></div>
 <div><label asp-for="@Model.UnitPrice"></label>: @Model.UnitPrice</div>
 <div><label asp-for="@Model.Category.CategoryName"></label>: @Model.Category?.CategoryName</div>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core;
 using Microsoft.AspNetCore.Mvc;
+using SmartBreadcrumbs;
 using WebApp.Common;
 using WebApp.ViewModels;
 
@@ -21,6 +22,7 @@ namespace WebApp.Controllers
             _mapper = mapper;
         }
 
+        [Breadcrumb("Categories")]
         public IActionResult Index()
         {
             ViewBag.Title = "Categories";
@@ -33,6 +35,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Edit", FromAction = "Index")]
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Edit Category";
