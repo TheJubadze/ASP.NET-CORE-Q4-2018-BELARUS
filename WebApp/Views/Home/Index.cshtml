@@ -1,19 +1,23 @@
-﻿@model string
+﻿@using WebApp.HtmlHelpers
+@model string
+
+@{
+    Layout = "~/Views/Home/Layout.cshtml";
+}
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/Category">Categories</a>
+            <a class="navbar-brand" href="/Product">Products</a>
+        </div>
+    </div>
+</nav>
 
 <div>@Model</div>
 @*<a asp-controller="Category" asp-action="Index">Categories</a><br/>
-<a asp-controller="Product" asp-action="Index">Products</a>*@
+    <a asp-controller="Product" asp-action="Index">Products</a>*@
 
-@section Headers
-{
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/Category">Categories</a>
-                <a class="navbar-brand" href="/Product">Products</a>
-            </div>
-        </div>
-    </nav>
-}
+<image northwind-id="1">Link to the first pic</image><br />
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Liliumbulbiferumflowertop.jpg/220px-Liliumbulbiferumflowertop.jpg"/>
+@Html.CreateImageLink("2", "Link to the second pic")
