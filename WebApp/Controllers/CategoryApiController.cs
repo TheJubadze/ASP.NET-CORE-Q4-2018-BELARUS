@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Common;
 using WebApp.Services;
@@ -37,7 +39,15 @@ namespace WebApp.Controllers
         [HttpPut]
         public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
         {
-            var category = await _categoryService.UpdateAsync(categoryEditViewModel);
+            Category category;
+            try
+            {
+                category = await _categoryService.UpdateAsync(categoryEditViewModel);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok(category);
         }
@@ -46,7 +56,12 @@ namespace WebApp.Controllers
         [Route("image/{id}")]
         public IActionResult Image(int id)
         {
-            return File(new MemoryStream(_categoryService.GetPicture(id)), Constants.CONTENT_TYPE_IMAGE);
+            var pic = _categoryService.GetPicture(id);
+
+            if (pic == null)
+                return BadRequest($"There is no image with ID={id}");
+
+            return File(new MemoryStream(pic), Constants.CONTENT_TYPE_IMAGE);
         }
     }
 }

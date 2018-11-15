@@ -51,7 +51,7 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest($"ERROR updating Product with ID={product.ProductId}. {e.Message}");
+                return BadRequest($"ERROR updating Product with ID={product?.ProductId}. {e.Message}");
             }
 
             return Ok(p);

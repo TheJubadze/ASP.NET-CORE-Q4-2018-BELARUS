@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartBreadcrumbs;
+using Swashbuckle.AspNetCore.Swagger;
 using WebApp.Filters;
 using WebApp.Logger;
 using WebApp.Middleware;
@@ -51,7 +52,13 @@ namespace WebApp
                 configMvcAction = options => options.Filters.Add(typeof(LoggingFilterAttribute));
             
             services.AddMvc(configMvcAction);
+
             services.UseBreadcrumbs(GetType().Assembly);
+            
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +82,12 @@ namespace WebApp
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
             app.ConfigureExceptionHandler(logger);
             app.UseMvc(BuildRoutes);
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
 
         private static void BuildRoutes(IRouteBuilder routeBuilder)

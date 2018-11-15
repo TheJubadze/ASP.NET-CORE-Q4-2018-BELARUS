@@ -67,7 +67,7 @@ namespace WebApp.Services
         public byte[] GetPicture(int id)
         {
             var category = _unitOfWork.Categories.Get(id);
-            if (category.Picture == null)
+            if (category?.Picture == null)
                 return null;
 
             var newArray = new byte[category.Picture.Length - PictureBytesToSkip];
