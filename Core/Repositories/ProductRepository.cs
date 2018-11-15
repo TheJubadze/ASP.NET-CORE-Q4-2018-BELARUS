@@ -12,6 +12,13 @@ namespace Core.Repositories
         {
         }
 
+        public Product GetFullProduct(int id)
+        {
+            Expression<Func<Product, object>> [] includes = { x => x.Category, x => x.Supplier };
+
+            return GetAll(includes).FirstOrDefault(x => x.ProductId == id);
+        }
+
         public IEnumerable<Product> GetFirst(int count)
         {
             Expression<Func<Product, object>> [] includes = { x => x.Category, x => x.Supplier };

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +39,7 @@ namespace Microsoft.AspNetCore.Builder
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if(contextFeature != null)
                     { 
-                        logger.LogError($"Something went wrong: {contextFeature.Error}");
+                        logger.LogError($"\n{new string('=', 80)}\n{DateTime.Now}: Something went wrong: {contextFeature.Error}\n");
  
                         await context.Response.WriteAsync(new ErrorDetails
                         {

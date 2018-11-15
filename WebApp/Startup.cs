@@ -36,10 +36,12 @@ namespace WebApp
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
             
             services.AddSingleton<IConfigurationService, ConfigurationService>();
-            
+
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<ILogger, FileLogger>(_ => new FileLogger("log.txt"));
-            
             services.AddAutoMapper();
             
             Action<MvcOptions> configMvcAction = x => { };

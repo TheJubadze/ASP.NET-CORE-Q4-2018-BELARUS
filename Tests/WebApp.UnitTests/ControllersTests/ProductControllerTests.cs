@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using AutoMapper;
-using Core;
 using Core.UnitTests;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,39 +17,36 @@ namespace WebApp.UnitTests.ControllersTests
         private const int CountOfProductsPerPage = 3;
 
         private readonly IMockService _mockService;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Mock<IConfigurationService> _configurationMock;
-        private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILogger> _loggerMock;
-        
-        private readonly ProductEditViewModel _createViewModel;
+        private readonly Mock<IProductService> _productServiceMock;
 
         public ProductControllerTests()
         {
             _mockService = new MockService();
-            _unitOfWork = _mockService.UnitOfWork;
-
-            _mapperMock = new Mock<IMapper>();
+            _productServiceMock = new Mock<IProductService>();
             _loggerMock = new Mock<ILogger>();
 
-            _configurationMock = new Mock<IConfigurationService>();
-            _configurationMock
-                .Setup(x => x.ProductsCount)
-                .Returns(CountOfProductsPerPage);
+            var product = _mockService.ProductsFixture.First();
 
-            _createViewModel  = new ProductEditViewModel
+            var createViewModel  = new ProductEditViewModel
             {
                 Product = new Product(),
-                Categories = _unitOfWork.Categories.GetAll(),
-                Suppliers = _unitOfWork.Suppliers.GetAll()
+                Categories = _mockService.CategoriesFixture,
+                Suppliers = _mockService.SuppliersFixture
             };
+
+            _productServiceMock.Setup(x => x.ProductEditViewModel).Returns(createViewModel);
+            _productServiceMock.Setup(x => x.GetAll()).Returns(_mockService.ProductsFixture);
+            _productServiceMock.Setup(x => x.Create(It.IsAny<ProductEditViewModel>())).Returns(product);
+            _productServiceMock.Setup(x => x.Update(It.IsAny<ProductEditViewModel>())).Returns(product);
+            _productServiceMock.Setup(x => x.GetFullProduct(It.IsAny<int>())).Returns(product);
         }
 
         [Fact]
         public void Index_Returns_A_ViewResult_And_List_Of_Products()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
 
             //Act
             var result = productController.Index();
@@ -66,7 +61,7 @@ namespace WebApp.UnitTests.ControllersTests
         public void Create_Get_Returns_ViewResult()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
 
             //Act
             var result = productController.Create();
@@ -82,11 +77,11 @@ namespace WebApp.UnitTests.ControllersTests
         public void Create_Post_Redirects_To_Details()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
 
 
             //Act
-            var result = productController.Create(_createViewModel);
+            var result = productController.Create(_productServiceMock.Object.ProductEditViewModel);
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -97,7 +92,7 @@ namespace WebApp.UnitTests.ControllersTests
         public void Edit_Get_Returns_ViewResult()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
 
             //Act
             var result = productController.Edit(1);
@@ -113,11 +108,11 @@ namespace WebApp.UnitTests.ControllersTests
         public void Edit_Post_Redirects_To_Details()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
 
 
             //Act
-            var result = productController.Edit(_createViewModel);
+            var result = productController.Edit(_productServiceMock.Object.ProductEditViewModel);
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
@@ -128,7 +123,7 @@ namespace WebApp.UnitTests.ControllersTests
         public void Details_Returns_ViewResult()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
             _mockService.ProductDbSetMock.Setup(x => x.Find(It.IsAny<int>())).Returns(new Product());
 
             //Act
@@ -143,7 +138,8 @@ namespace WebApp.UnitTests.ControllersTests
         public void Details_Throws_ArgumentOutOfRangeException()
         {
             //Arrange
-            var productController = new ProductController(_unitOfWork, _mapperMock.Object, _configurationMock.Object, _loggerMock.Object);
+            var productController = new ProductController(_loggerMock.Object, _productServiceMock.Object);
+            _productServiceMock.Setup(x => x.GetFullProduct(It.IsAny<int>())).Returns((Product) null);
 
             //Act
             //Assert

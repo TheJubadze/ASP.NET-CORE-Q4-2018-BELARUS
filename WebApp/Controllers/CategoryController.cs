@@ -1,25 +1,20 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
-using AutoMapper;
-using Core;
 using Microsoft.AspNetCore.Mvc;
 using SmartBreadcrumbs;
 using WebApp.Common;
+using WebApp.Services;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private const int PictureBytesToSkip = 78;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryController(ICategoryService categoryService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _categoryService = categoryService;
         }
 
         [Breadcrumb("Categories")]
@@ -28,7 +23,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Categories";
             var model = new CategoryIndexViewModel
             {
-                Categories = _unitOfWork.Categories.GetAll()
+                Categories = _categoryService.GetAll()
             };
 
             return View(model);
@@ -42,48 +37,18 @@ namespace WebApp.Controllers
 
             var model = new CategoryEditViewModel
             {
-                Category = _unitOfWork.Categories.Get(id)
+                Category = _categoryService.Get(id)
             };
 
-            model.Category.Picture = GetPicture(id);
+            model.Category.Picture = _categoryService.GetPicture(id);
             
             return View(model);
-        }
-
-        private byte[] GetPicture(int id)
-        {
-            var category = _unitOfWork.Categories.Get(id);
-            if (category.Picture == null)
-                return null;
-
-            var newArray = new byte[category.Picture.Length - PictureBytesToSkip];
-            Array.Copy(category.Picture, PictureBytesToSkip, newArray, 0, newArray.Length);
-            return newArray;
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
         {
-            var category = _unitOfWork.Categories.Get(categoryEditViewModel.Category.CategoryId);
-            _mapper.Map(categoryEditViewModel, category);
-
-            if (categoryEditViewModel.File != null && categoryEditViewModel.File.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await categoryEditViewModel.File.CopyToAsync(memoryStream);
-
-                    var newPic = memoryStream.ToArray();
-                    var picture = new byte[PictureBytesToSkip + newPic.Length];
-
-                    Array.Copy(newPic, 0, picture, PictureBytesToSkip, newPic.Length);
-
-                    category.Picture = picture;
-                }
-            }
-
-            category = _unitOfWork.Categories.Update(category);
-            _unitOfWork.Complete();
+            var category = await _categoryService.CreateAsync(categoryEditViewModel);
 
             return RedirectToAction(nameof(Edit), new {id = category.CategoryId});
         }
@@ -91,7 +56,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Image(int id)
         {
-            return File(new MemoryStream(GetPicture(id)), Constants.CONTENT_TYPE_IMAGE);
+            return File(new MemoryStream(_categoryService.GetPicture(id)), Constants.CONTENT_TYPE_IMAGE);
         }
     }
 }

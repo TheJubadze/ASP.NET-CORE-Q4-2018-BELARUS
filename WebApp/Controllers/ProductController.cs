@@ -1,6 +1,4 @@
 ﻿using System;
-using AutoMapper;
-using Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartBreadcrumbs;
@@ -11,33 +9,13 @@ namespace WebApp.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IProductService _productService;
         private readonly ILogger _logger;
 
-        private readonly int _productsCount;
-
-        private readonly ProductEditViewModel _productEditViewModel;
-        private ProductEditViewModel ProductEditViewModel
+        public ProductController(ILogger logger, IProductService productService)
         {
-            get
-            {
-                _productEditViewModel.Categories = _unitOfWork.Categories.GetAll();
-                _productEditViewModel.Suppliers = _unitOfWork.Suppliers.GetAll();
-                return _productEditViewModel;
-            }
-        }
-
-        public ProductController(IUnitOfWork unitOfWork,
-            IMapper mapper,
-            IConfigurationService configurationService,
-            ILogger logger)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _logger = logger;
-            _productsCount = configurationService.ProductsCount;
-            _productEditViewModel = new ProductEditViewModel();
+            _productService = productService;
         }
 
         [Breadcrumb("Products")]
@@ -45,7 +23,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Products";
             _logger.LogInformation("Products list");
-            var model = new ProductIndexViewModel {Products = _unitOfWork.Products.GetFirst(_productsCount)};
+            var model = new ProductIndexViewModel {Products = _productService.GetAll()};
 
             return View(model);
         }
@@ -56,7 +34,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "New Product";
 
-            return View(ProductEditViewModel);
+            return View(_productService.ProductEditViewModel);
         }
 
         [HttpPost]
@@ -64,10 +42,9 @@ namespace WebApp.Controllers
         public IActionResult Create(ProductEditViewModel createViewModel)
         {
             if (!ModelState.IsValid) 
-                return View(ProductEditViewModel);
+                return View(_productService.ProductEditViewModel);
 
-            var product = _unitOfWork.Products.Add(createViewModel.Product);
-            _unitOfWork.Complete();
+            var product = _productService.Create(createViewModel);
 
             return RedirectToAction(nameof(Details), new {id = product.ProductId});
         }
@@ -77,9 +54,9 @@ namespace WebApp.Controllers
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Edit Product";
-            _productEditViewModel.Product = _unitOfWork.Products.Get(id);
+            _productService.ProductEditViewModel.Product = _productService.Get(id);
 
-            return View(ProductEditViewModel);
+            return View(_productService.ProductEditViewModel);
         }
 
         [HttpPost]
@@ -87,10 +64,9 @@ namespace WebApp.Controllers
         public IActionResult Edit(ProductEditViewModel createViewModel)
         {
             if (!ModelState.IsValid) 
-                return View(ProductEditViewModel);
+                return View(_productService.ProductEditViewModel);
 
-            var product = _unitOfWork.Products.Update(createViewModel.Product);
-            _unitOfWork.Complete();
+            var product = _productService.Update(createViewModel);
 
             return RedirectToAction(nameof(Details), new {id = product.ProductId});
         }
@@ -99,14 +75,8 @@ namespace WebApp.Controllers
         [Breadcrumb("Details", FromAction = "Index")]
         public IActionResult Details(int id)
         {
-            var product = _unitOfWork.Products.Get(id) ?? throw new ArgumentOutOfRangeException();
+            var product = _productService.GetFullProduct(id) ?? throw new ArgumentOutOfRangeException();
             
-            if (product.CategoryId.HasValue)
-                product.Category = _unitOfWork.Categories.Get(product.CategoryId.Value);
-
-            if (product.SupplierId.HasValue)
-                product.Supplier = _unitOfWork.Suppliers.Get(product.SupplierId.Value);
-                
             return View(product);
         }
     }
