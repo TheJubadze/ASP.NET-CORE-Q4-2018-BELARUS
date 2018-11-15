@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,49 +12,15 @@ namespace ConsoleApp
     {
         static readonly HttpClient Client = new HttpClient();
 
-        static void ShowProduct(Product product)
+        static async Task<IEnumerable<T>> GetProductAsync<T>(string path)
         {
-            Console.WriteLine($"Name: {product.ProductName}\tPrice: " +
-                $"{product.UnitPrice}\tCategory: {product.Category.CategoryName}");
-        }
-
-        static async Task<Uri> CreateProductAsync(Product product)
-        {
-            HttpResponseMessage response = await Client.PostAsJsonAsync(
-                "api/products", product);
-            response.EnsureSuccessStatusCode();
-
-            // return URI of the created resource.
-            return response.Headers.Location;
-        }
-
-        static async Task<Product> GetProductAsync(string path)
-        {
-            Product product = null;
+            IEnumerable<T> entities = null;
             HttpResponseMessage response = await Client.GetAsync(path);
+
             if (response.IsSuccessStatusCode)
-            {
-                product = await response.Content.ReadAsAsync<Product>();
-            }
-            return product;
-        }
+                entities = await response.Content.ReadAsAsync<IEnumerable<T>>();
 
-        static async Task<Product> UpdateProductAsync(Product product)
-        {
-            HttpResponseMessage response = await Client.PutAsJsonAsync(
-                $"api/products/{product.ProductId}", product);
-            response.EnsureSuccessStatusCode();
-
-            // Deserialize the updated product from the response body.
-            product = await response.Content.ReadAsAsync<Product>();
-            return product;
-        }
-
-        static async Task<HttpStatusCode> DeleteProductAsync(string id)
-        {
-            HttpResponseMessage response = await Client.DeleteAsync(
-                $"api/products/{id}");
-            return response.StatusCode;
+            return entities;
         }
 
         static void Main()
@@ -64,46 +31,24 @@ namespace ConsoleApp
         static async Task RunAsync()
         {
             // Update port # in the following line.
-            Client.BaseAddress = new Uri("http://localhost:64195/");
+            Client.BaseAddress = new Uri("http://localhost:59890/");
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
+            
+            Console.WriteLine("Products:");
+            (await GetProductAsync<Product>("api/product"))
+                .Select(x => x.ProductName)
+                .ToList()
+                .ForEach(Console.WriteLine);
 
-            try
-            {
-                // Create a new product
-                Product product = new Product
-                {
-                    ProductName = "Gizmo",
-                    UnitPrice = 100
-                };
-
-                var url = await CreateProductAsync(product);
-                Console.WriteLine($"Created at {url}");
-
-                // Get the product
-                product = await GetProductAsync(url.PathAndQuery);
-                ShowProduct(product);
-
-                // Update the product
-                Console.WriteLine("Updating price...");
-                product.UnitPrice = 80;
-                await UpdateProductAsync(product);
-
-                // Get the updated product
-                product = await GetProductAsync(url.PathAndQuery);
-                ShowProduct(product);
-
-                // Delete the product
-                var statusCode = await DeleteProductAsync(product.ProductId.ToString());
-                Console.WriteLine($"Deleted (HTTP Status = {(int)statusCode})");
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            Console.WriteLine($"\n{new string('=', 80)}\nCategories:");
+            (await GetProductAsync<Category>("api/category"))
+                .Select(x => x.CategoryName)
+                .ToList()
+                .ForEach(Console.WriteLine);
 
             Console.ReadLine();
-        }    }
+        }
+    }
 }
