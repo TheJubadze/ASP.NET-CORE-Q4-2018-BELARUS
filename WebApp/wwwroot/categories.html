@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Category App</title>
+</head>
+<body>
+<a href="http://localhost:59890">Home</a><br/>
+<div>
+    <h2>All Categories</h2>
+    <ul id="categories"/>
+</div>
+<div>
+    <h2>Search by ID</h2>
+    <input type="text" id="catId" size="5"/>
+    <input type="button" value="Search" onclick="categories();"/>
+    <p id="category"/>
+</div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+<script>
+    var uri = 'api/category';
+
+    $(document).ready(function() {
+        // Send an AJAX request
+        $.getJSON(uri)
+            .done(function(data) {
+                // On success, 'data' contains a list of categories.
+                $.each(data,
+                    function(key, item) {
+                        // Add a list item for the category.
+                        $('<li>', { text: formatCategory(item) }).appendTo($('#categories'));
+                    });
+            });
+    });
+
+    function formatCategory(item) {
+        return item.categoryName + ': ' + item.description;
+    }
+
+    function categories() {
+        var id = $('#catId').val();
+        $.getJSON(uri + '/' + id)
+            .done(function(data) {
+                $('#category').text(formatCategory(data));
+            })
+            .fail(function(jqXHR, textStatus, err) {
+                $('#category').text('Error: ' + err);
+            });
+    }
+</script>
+</body>
+</html>
