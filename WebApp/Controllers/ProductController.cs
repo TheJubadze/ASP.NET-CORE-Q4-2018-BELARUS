@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Products";
             _logger.LogInformation("Products list");
-            var model = new ProductIndexViewModel {Products = _productService.GetAll()};
+            var model = new ProductIndexViewModel {Products = _productService.GetMany()};
 
             return View(model);
         }
@@ -44,7 +44,7 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid) 
                 return View(_productService.ProductEditViewModel);
 
-            var product = _productService.Create(createViewModel);
+            var product = _productService.Create(createViewModel.Product);
 
             return RedirectToAction(nameof(Details), new {id = product.ProductId});
         }
@@ -66,7 +66,7 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid) 
                 return View(_productService.ProductEditViewModel);
 
-            var product = _productService.Update(createViewModel);
+            var product = _productService.Update(createViewModel.Product);
 
             return RedirectToAction(nameof(Details), new {id = product.ProductId});
         }

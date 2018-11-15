@@ -34,10 +34,10 @@ namespace WebApp.Controllers
             return Ok(category);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(CategoryEditViewModel categoryEditViewModel)
+        [HttpPut]
+        public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
         {
-            var category = await _categoryService.CreateAsync(categoryEditViewModel);
+            var category = await _categoryService.UpdateAsync(categoryEditViewModel);
 
             return Ok(category);
         }

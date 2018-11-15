@@ -36,9 +36,9 @@ namespace WebApp.UnitTests.ControllersTests
             };
 
             _productServiceMock.Setup(x => x.ProductEditViewModel).Returns(createViewModel);
-            _productServiceMock.Setup(x => x.GetAll()).Returns(_mockService.ProductsFixture);
-            _productServiceMock.Setup(x => x.Create(It.IsAny<ProductEditViewModel>())).Returns(product);
-            _productServiceMock.Setup(x => x.Update(It.IsAny<ProductEditViewModel>())).Returns(product);
+            _productServiceMock.Setup(x => x.GetMany()).Returns(_mockService.ProductsFixture);
+            _productServiceMock.Setup(x => x.Create(It.IsAny<Product>())).Returns(product);
+            _productServiceMock.Setup(x => x.Update(It.IsAny<Product>())).Returns(product);
             _productServiceMock.Setup(x => x.GetFullProduct(It.IsAny<int>())).Returns(product);
         }
 

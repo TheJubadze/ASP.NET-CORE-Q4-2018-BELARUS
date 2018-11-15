@@ -9,7 +9,8 @@ namespace WebApp.Services
     {
         IEnumerable<Category> GetAll();
         Category Get(int id);
-        Task<Category> CreateAsync(CategoryEditViewModel categoryEditViewModel);
+        int Delete(Category category);
+        Task<Category> UpdateAsync(CategoryEditViewModel categoryEditViewModel);
         byte[] GetPicture(int id);
     }
 }

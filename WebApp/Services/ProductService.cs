@@ -18,17 +18,30 @@ namespace WebApp.Services
             _productEditViewModel = new ProductEditViewModel();
         }
 
+        public int Delete(Product product)
+        {
+            _unitOfWork.Products.Delete(product);
+
+            return _unitOfWork.Complete();
+        }
+
         public ProductEditViewModel ProductEditViewModel
         {
             get
             {
                 _productEditViewModel.Categories = _unitOfWork.Categories.GetAll();
                 _productEditViewModel.Suppliers = _unitOfWork.Suppliers.GetAll();
+
                 return _productEditViewModel;
             }
         }
 
         public IEnumerable<Product> GetAll()
+        {
+            return _unitOfWork.Products.GetAll();
+        }
+
+        public IEnumerable<Product> GetMany()
         {
             return _unitOfWork.Products.GetFirst(_productsCount);
         }
@@ -43,20 +56,20 @@ namespace WebApp.Services
             return _unitOfWork.Products.GetFullProduct(id);
         }
 
-        public Product Create(ProductEditViewModel productEditViewModel)
+        public Product Create(Product product)
         {
-            var product = _unitOfWork.Products.Add(productEditViewModel.Product);
+            var p = _unitOfWork.Products.Add(product);
             _unitOfWork.Complete();
 
-            return product;
+            return p;
         }
 
-        public Product Update(ProductEditViewModel productEditViewModel)
+        public Product Update(Product product)
         {
-            var product = _unitOfWork.Products.Update(productEditViewModel.Product);
+            var p = _unitOfWork.Products.Update(product);
             _unitOfWork.Complete();
 
-            return product;
+            return p;
         }
     }
 }

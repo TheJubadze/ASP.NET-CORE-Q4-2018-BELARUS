@@ -31,7 +31,14 @@ namespace WebApp.Services
             return _unitOfWork.Categories.Get(id);
         }
 
-        public async Task<Category> CreateAsync(CategoryEditViewModel categoryEditViewModel)
+        public int Delete(Category category)
+        {
+            _unitOfWork.Categories.Delete(category);
+
+            return _unitOfWork.Complete();
+        }
+
+        public async Task<Category> UpdateAsync(CategoryEditViewModel categoryEditViewModel)
         {
             var category = _unitOfWork.Categories.Get(categoryEditViewModel.Category.CategoryId);
             _mapper.Map(categoryEditViewModel, category);

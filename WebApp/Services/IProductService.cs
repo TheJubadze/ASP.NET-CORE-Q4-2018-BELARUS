@@ -7,11 +7,14 @@ namespace WebApp.Services
     public interface IProductService
     {
         IEnumerable<Product> GetAll();
+        IEnumerable<Product> GetMany();
         Product Get(int id);
         Product GetFullProduct(int id);
 
-        Product Create(ProductEditViewModel productEditViewModel);
-        Product Update(ProductEditViewModel productEditViewModel);
+        Product Create(Product product);
+        Product Update(Product product);
+        int Delete(Product product);
+
         ProductEditViewModel ProductEditViewModel { get; }
     }
 }

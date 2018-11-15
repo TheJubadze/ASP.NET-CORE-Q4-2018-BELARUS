@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
         {
-            var category = await _categoryService.CreateAsync(categoryEditViewModel);
+            var category = await _categoryService.UpdateAsync(categoryEditViewModel);
 
             return RedirectToAction(nameof(Edit), new {id = category.CategoryId});
         }
