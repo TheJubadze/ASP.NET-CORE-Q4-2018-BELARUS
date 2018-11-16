@@ -76,18 +76,18 @@ namespace WebApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             app.UseMiddleware<CachingMiddleware>();
             app.UseStaticFiles();
             app.UseNodeModules(env.ContentRootPath);
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
             app.ConfigureExceptionHandler(logger);
             app.UseMvc(BuildRoutes);
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
         }
 
         private static void BuildRoutes(IRouteBuilder routeBuilder)
