@@ -3,14 +3,14 @@ using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Services;
 
-namespace WebApp.Controllers
+namespace WebApp.Controllers.API
 {
-    [Route("api/product")]
-    public class ProductApiController : Controller
+    [Route("api/[controller]")]
+    public class ProductController : Controller
     {
         private readonly IProductService _productService;
 
-        public ProductApiController(IProductService productService)
+        public ProductController(IProductService productService)
         {
             _productService = productService;
         }
