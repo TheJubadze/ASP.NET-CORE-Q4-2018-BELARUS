@@ -37,7 +37,7 @@ namespace WebApp.Controllers.API
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(CategoryEditViewModel categoryEditViewModel)
+        public async Task<IActionResult> Put(CategoryEditViewModel categoryEditViewModel)
         {
             Category category;
             try
@@ -54,7 +54,7 @@ namespace WebApp.Controllers.API
 
         [HttpGet]
         [Route("image/{id}")]
-        public IActionResult Image(int id)
+        public IActionResult GetImage(int id)
         {
             var pic = _categoryService.GetPicture(id);
 

@@ -4,6 +4,8 @@ using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +37,12 @@ namespace WebApp
             var connStr = _configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connStr,
+                sqlOpt => sqlOpt.MigrationsAssembly("WebApp")));
             
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityDbContext>();
+
             services.AddSingleton<IConfigurationService, ConfigurationService>();
 
             services.AddScoped<ICategoryService, CategoryService>();
@@ -87,6 +94,7 @@ namespace WebApp
             app.UseNodeModules(env.ContentRootPath);
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
             app.ConfigureExceptionHandler(logger);
+            app.UseAuthentication();
             app.UseMvc(BuildRoutes);
         }
 

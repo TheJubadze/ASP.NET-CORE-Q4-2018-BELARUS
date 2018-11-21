@@ -33,7 +33,7 @@ namespace WebApp.Controllers.API
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]Product product)
+        public IActionResult Post([FromBody]Product product)
         {
             product.ProductId = 0;
             var newProduct = _productService.Create(product);
@@ -42,7 +42,7 @@ namespace WebApp.Controllers.API
         }
 
         [HttpPut]
-        public IActionResult Edit([FromBody]Product product)
+        public IActionResult Put([FromBody]Product product)
         {
             Product p;
             try
