@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json.home.tpl" />
     <None Remove="appsettings.json.mac.tpl" />
     <None Remove="appsettings.json.work.tpl" />
     <None Remove="log.txt" />
@@ -23,6 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Account\ResetPassword.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Account\ForgotPassword.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Account\Login.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
