@@ -1,4 +1,7 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -54,10 +57,16 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logoff()
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Redirect("~/Home/Index");
+
+            var callbackUrl = Url.Action(nameof(HomeController.Index), "Home", values: null, protocol: Request.Scheme);
+
+            return SignOut(
+                new AuthenticationProperties { RedirectUri = callbackUrl },
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         [HttpGet]
@@ -84,6 +93,15 @@ namespace WebApp.Controllers
             var model = new ResetPasswordViewModel {Code = code, Email = user.Email};
             
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult AzureAd()
+        {
+            var redirectUrl = Url.Action(nameof(HomeController.Index), "Home");
+            return Challenge(
+                new AuthenticationProperties { RedirectUri = redirectUrl },
+                OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         [HttpPost]

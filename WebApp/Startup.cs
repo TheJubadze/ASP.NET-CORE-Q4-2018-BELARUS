@@ -2,6 +2,8 @@
 using AutoMapper;
 using Core;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +42,7 @@ namespace WebApp
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
             services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connStr,
                 sqlOpt => sqlOpt.MigrationsAssembly("WebApp")));
-            
+
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
@@ -54,32 +56,38 @@ namespace WebApp
 
             services.AddScoped<ILogger, FileLogger>(_ => new FileLogger("log.txt"));
             services.AddAutoMapper();
-            
+
             Action<MvcOptions> configMvcAction = x => { };
 
             var isLoggingEnabled = _configuration.GetSection("Logging").GetValue<bool>("ActionLoggingEnabled");
-            if(isLoggingEnabled) 
+            if (isLoggingEnabled)
                 configMvcAction = options => options.Filters.Add(typeof(LoggingFilterAttribute));
-            
+
+            services.AddAuthentication(sharedOptions =>
+                {
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddAzureAd(options => _configuration.Bind("AzureAd", options))
+                .AddCookie();
+
             services.AddMvc(configMvcAction);
 
             services.UseBreadcrumbs(GetType().Assembly);
-            
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-            });
+
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "My API", Version = "v1"}); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
+        public void Configure(IApplicationBuilder app,
             IHostingEnvironment env,
             ILogger logger)
         {
             logger.LogInformation("Application start");
             logger.LogInformation($"Application location: {env.ContentRootPath}");
             logger.LogInformation($"Connection string: {_configuration.GetConnectionString("DefaultConnection")}");
-            logger.LogInformation($"Products list count: {_configuration.GetSection("RepositorySettings").GetSection("ProductsCountMax").Value}");
+            logger.LogInformation(
+                $"Products list count: {_configuration.GetSection("RepositorySettings").GetSection("ProductsCountMax").Value}");
 
             if (env.IsDevelopment())
             {
@@ -87,10 +95,7 @@ namespace WebApp
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             app.UseMiddleware<CachingMiddleware>();
             app.UseStaticFiles();
