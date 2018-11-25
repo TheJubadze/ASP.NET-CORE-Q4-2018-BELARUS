@@ -1,4 +1,5 @@
-﻿namespace WebApp.Middleware
+﻿// ReSharper disable once CheckNamespace
+namespace Microsoft.AspNetCore.Authentication
 {
     public class AzureAdOptions
     {

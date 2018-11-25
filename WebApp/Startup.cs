@@ -2,6 +2,7 @@
 using AutoMapper;
 using Core;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +48,14 @@ namespace WebApp
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication(sharedOptions =>
+                {
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddAzureAd(options => _configuration.Bind("AzureAd", options))
+                .AddCookie();
+
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IEmailSender, EmailSender>();
 
@@ -62,14 +71,6 @@ namespace WebApp
             var isLoggingEnabled = _configuration.GetSection("Logging").GetValue<bool>("ActionLoggingEnabled");
             if (isLoggingEnabled)
                 configMvcAction = options => options.Filters.Add(typeof(LoggingFilterAttribute));
-
-            services.AddAuthentication(sharedOptions =>
-                {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
-                .AddAzureAd(options => _configuration.Bind("AzureAd", options))
-                .AddCookie();
 
             services.AddMvc(configMvcAction);
 

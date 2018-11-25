@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace WebApp.Middleware
+// ReSharper disable once CheckNamespace
+namespace Microsoft.AspNetCore.Authentication
 {
     public static class AzureAdAuthenticationBuilderExtensions
     {        
