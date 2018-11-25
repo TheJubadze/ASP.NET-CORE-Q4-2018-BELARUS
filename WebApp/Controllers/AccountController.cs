@@ -6,20 +6,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels;
+using WebApp.Common;
 
 namespace WebApp.Controllers
 {
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailSender emailSender)
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+            IEmailSender emailSender, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -37,6 +41,16 @@ namespace WebApp.Controllers
                 UserName = model.Name,
                 Email = model.Email
             }, model.Password);
+
+            var adm = Constants.USER_ROLE_ADMIN;
+            if(!await _roleManager.RoleExistsAsync(adm))
+                await _roleManager.CreateAsync(new IdentityRole(adm));
+
+            if (model.IsAdmin)
+            {
+                var user = await _userManager.FindByNameAsync(model.Name);
+                await _userManager.AddToRoleAsync(user, adm);
+            }
 
             return Redirect("~/Home/Index");
         }
@@ -63,8 +77,10 @@ namespace WebApp.Controllers
 
             var callbackUrl = Url.Action(nameof(HomeController.Index), "Home", values: null, protocol: Request.Scheme);
 
+            return Redirect("~/Home/Index");
+
             return SignOut(
-                new AuthenticationProperties { RedirectUri = callbackUrl },
+                new AuthenticationProperties {RedirectUri = callbackUrl},
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 OpenIdConnectDefaults.AuthenticationScheme);
         }
@@ -80,8 +96,10 @@ namespace WebApp.Controllers
         {
             var user = await _userManager.FindByEmailAsync(viewModel.Email);
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code}, HttpContext.Request.Scheme);
-            await _emailSender.SendEmailAsync(user.Email, "Reset Password", $"Link to reset your password: {callbackUrl}");
+            var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code},
+                HttpContext.Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "Reset Password",
+                $"Link to reset your password: {callbackUrl}");
 
             return Redirect("~/Home/Index");
         }
@@ -91,7 +109,7 @@ namespace WebApp.Controllers
         {
             var user = await _userManager.FindByIdAsync(userid);
             var model = new ResetPasswordViewModel {Code = code, Email = user.Email};
-            
+
             return View(model);
         }
 
@@ -100,7 +118,7 @@ namespace WebApp.Controllers
         {
             var redirectUrl = Url.Action(nameof(HomeController.Index), "Home");
             return Challenge(
-                new AuthenticationProperties { RedirectUri = redirectUrl },
+                new AuthenticationProperties {RedirectUri = redirectUrl},
                 OpenIdConnectDefaults.AuthenticationScheme);
         }
 
@@ -112,5 +130,6 @@ namespace WebApp.Controllers
 
             return Redirect("~/Home/Index");
         }
+
     }
 }

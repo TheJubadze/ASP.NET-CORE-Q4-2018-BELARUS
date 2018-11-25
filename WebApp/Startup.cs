@@ -48,13 +48,13 @@ namespace WebApp
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(sharedOptions =>
-                {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
-                .AddAzureAd(options => _configuration.Bind("AzureAd", options))
-                .AddCookie();
+            //services.AddAuthentication(sharedOptions =>
+            //    {
+            //        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //        sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            //    })
+            //    .AddAzureAd(options => _configuration.Bind("AzureAd", options))
+            //    .AddCookie();
 
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IEmailSender, EmailSender>();
