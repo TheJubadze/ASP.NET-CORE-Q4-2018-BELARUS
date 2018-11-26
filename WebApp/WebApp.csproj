@@ -6,14 +6,19 @@
 
   <ItemGroup>
     <None Remove="appsettings.json.home.tpl" />
+    <None Remove="appsettings.json.home.txt" />
     <None Remove="appsettings.json.mac.tpl" />
+    <None Remove="appsettings.json.mac.txt" />
     <None Remove="appsettings.json.work.tpl" />
+    <None Remove="appsettings.json.work.txt" />
     <None Remove="log.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
     <PackageReference Include="SmartBreadcrumbs" Version="1.0.3.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
@@ -48,6 +53,10 @@
     <Content Update="Views\Product\Details.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
 </Project>

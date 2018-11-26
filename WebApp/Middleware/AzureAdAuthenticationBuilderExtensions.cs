@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Authentication
             public void Configure(string name, OpenIdConnectOptions options)
             {
                 options.ClientId = _azureOptions.ClientId;
-                options.Authority = $"{_azureOptions.Instance}{_azureOptions.TenantId}";
+                options.Authority = $"{_azureOptions.Instance}{_azureOptions.TenantId}/v2.0";
                 options.UseTokenLifetime = true;
                 options.CallbackPath = _azureOptions.CallbackPath;
                 options.RequireHttpsMetadata = false;

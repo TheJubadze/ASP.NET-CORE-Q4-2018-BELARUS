@@ -1,10 +1,10 @@
 ﻿using System;
+using AspNet.Security.OAuth.Validation;
 using AutoMapper;
 using Core;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using SmartBreadcrumbs;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApp.Filters;
@@ -48,13 +49,19 @@ namespace WebApp
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.AddAuthentication(sharedOptions =>
-            //    {
-            //        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //        sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            //    })
-            //    .AddAzureAd(options => _configuration.Bind("AzureAd", options))
-            //    .AddCookie();
+            services.AddAuthentication()
+                .AddOpenIdConnect(AzureADDefaults.AuthenticationScheme, "<EPAM>", opts =>
+                {
+                    _configuration.Bind("AzureAd", opts);
+                    opts.Authority = $"{_configuration["AzureAd:Instance"]}{_configuration["AzureAd:TenantId"]}/v2.0/";
+                    opts.Scope.Add("email");
+                    opts.Scope.Add("openid");
+                    opts.Scope.Add("profile");
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "preffered_name"
+                    };
+                });
 
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IEmailSender, EmailSender>();

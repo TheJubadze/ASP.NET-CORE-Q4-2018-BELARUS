@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.\\mssql;Database=Northwind;Trusted_Connection=True;"
+  }
+}

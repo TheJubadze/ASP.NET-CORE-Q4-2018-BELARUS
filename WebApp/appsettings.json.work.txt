@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.\\studiodb;Database=Northwind;Trusted_Connection=True;"
+  }
+}

@@ -268,6 +268,5 @@ __pycache__/
 # tools/
 
 log.txt
-appsettings.json
 WebApp/Cache/
 .vscode
