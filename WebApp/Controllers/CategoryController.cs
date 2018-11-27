@@ -54,6 +54,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Route("/Category/Image")]
         public IActionResult Image(int id)
         {
             return File(new MemoryStream(_categoryService.GetPicture(id)), Constants.CONTENT_TYPE_IMAGE);

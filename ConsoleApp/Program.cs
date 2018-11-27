@@ -31,7 +31,7 @@ namespace ConsoleApp
         static async Task RunAsync()
         {
             // Update port # in the following line.
-            Client.BaseAddress = new Uri("http://localhost:59890/");
+            Client.BaseAddress = new Uri("https://localhost:44313/");
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

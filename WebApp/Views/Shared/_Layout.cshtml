@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -35,22 +40,17 @@ else
     <p>Header should be here</p>
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (SignInManager.IsSignedIn(User))
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text">Hello @User.Identity.Name!</li>
-        <li>
-            <a asp-area="" asp-controller="Account" asp-action="Logout">Sign out</a>
-        </li>
-    </ul>
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-nav">
+        <a class="nav-item nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)</a>
+        <button type="submit" class="btn btn-link nav-item nav-link" style="border: none">Logout</button>
+    </form>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            <a asp-area="" asp-controller="Account" asp-action="Login">Sign in</a>
-        </li>
-    </ul>
+    <a class="nav-item nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <a class="nav-item nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
 }
 <div class="container">
     @RenderBody()
@@ -64,6 +64,9 @@ else
 {
     <p>Footer should be here</p>
 }
-
+@if (IsSectionDefined("Scripts"))
+{
+    @RenderSection("Scripts", required: false)
+}
 </body>
 </html>

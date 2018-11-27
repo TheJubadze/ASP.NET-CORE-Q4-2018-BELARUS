@@ -45,23 +45,20 @@ namespace WebApp
             services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connStr,
                 sqlOpt => sqlOpt.MigrationsAssembly("WebApp")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<IdentityDbContext>()
+            //    .AddDefaultTokenProviders();
 
-            //services.AddAuthentication()
-            //    .AddOpenIdConnect(AzureADDefaults.AuthenticationScheme, "<EPAM>", opts =>
-            //    {
-            //        _configuration.Bind("AzureAd", opts);
-            //        opts.Authority = $"{_configuration["AzureAd:Instance"]}{_configuration["AzureAd:TenantId"]}/v2.0/";
-            //        opts.Scope.Add("email");
-            //        opts.Scope.Add("openid");
-            //        opts.Scope.Add("profile");
-            //        opts.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            NameClaimType = "preffered_name"
-            //        };
-            //    });
+            services.AddAuthentication()
+                .AddOpenIdConnect(AzureADDefaults.AuthenticationScheme, "Azure AD", opts =>
+                {
+                    _configuration.Bind("AzureAd", opts);
+                    opts.Authority = $"{_configuration["AzureAd:Instance"]}{_configuration["AzureAd:TenantId"]}/v2.0/";
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "preffered_name"
+                    };
+                });
 
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IEmailSender, EmailSender>();

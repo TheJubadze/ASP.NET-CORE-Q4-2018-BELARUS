@@ -12,7 +12,7 @@ namespace WebApp.Services
             SmtpClient client = new SmtpClient("smtp.gmail.com")
             {
                 UseDefaultCredentials = false, 
-                Credentials = new NetworkCredential("testu8888@gmail.com", ""),
+                Credentials = new NetworkCredential("testu8888@gmail.com", "P@ssword123456"),
                 Port = 587,
                 EnableSsl = true
             };

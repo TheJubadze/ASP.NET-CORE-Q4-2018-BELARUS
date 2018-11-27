@@ -30,7 +30,7 @@ namespace WebApp.Middleware
         {
             _timer.Change(_configurationService.LifeTime * 1000, 0);
             
-            if (!context.Request.GetUri().Segments.Any(x => x.Contains(Constants.IMAGES)))
+            if (context.Request.GetUri().Segments.All(x => x != Constants.IMAGES))
             {
                 await _next(context);
                 return;
