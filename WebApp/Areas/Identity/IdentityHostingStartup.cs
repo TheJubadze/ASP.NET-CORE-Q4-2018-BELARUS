@@ -19,7 +19,15 @@ namespace WebApp.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityContextConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>()
+                //services.AddDefaultIdentity<IdentityUser>()
+                //    .AddRoles<IdentityRole>()
+                //    .AddRoleManager<RoleManager<IdentityRole>>()
+                //    .AddEntityFrameworkStores<IdentityContext>();
+
+                services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<IdentityContext>()
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<IdentityContext>();
             });
         }

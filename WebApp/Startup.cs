@@ -42,12 +42,6 @@ namespace WebApp
             var connStr = _configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connStr));
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connStr,
-                sqlOpt => sqlOpt.MigrationsAssembly("WebApp")));
-
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<IdentityDbContext>()
-            //    .AddDefaultTokenProviders();
 
             services.AddAuthentication()
                 .AddOpenIdConnect(AzureADDefaults.AuthenticationScheme, "Azure AD", opts =>
