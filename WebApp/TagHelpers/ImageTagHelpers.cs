@@ -9,7 +9,7 @@ namespace WebApp.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
-            var address = "/Images/" + NorthwindId;
+            var address = "/Category/Images/" + NorthwindId;
             output.Attributes.SetAttribute("href", address);
             //output.Content.SetContent(address);
         }

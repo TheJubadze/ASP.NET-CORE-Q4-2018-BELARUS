@@ -30,7 +30,7 @@ namespace WebApp.Middleware
         {
             _timer.Change(_configurationService.LifeTime * 1000, 0);
             
-            if (context.Request.GetUri().Segments.All(x => x != Constants.IMAGES))
+            if (context.Request.GetUri().Segments.All(x => x.Trim('/', '\\').ToLower() != Constants.IMAGES))
             {
                 await _next(context);
                 return;
@@ -42,7 +42,8 @@ namespace WebApp.Middleware
             {
                 using (var memStream = new MemoryStream())
                 {
-                    var filePath = $"{_configurationService.CachePath}{context.Request.GetUri().Segments[2]}.bmp";
+                    var segments = context.Request.GetUri().Segments;
+                    var filePath = $"{_configurationService.CachePath}{segments[segments.Length - 1]}.bmp";
 
                     if (File.Exists(filePath))
                     {

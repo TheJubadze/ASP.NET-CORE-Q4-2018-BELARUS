@@ -7,7 +7,7 @@ namespace WebApp.HtmlHelpers
     {
         public static HtmlString CreateImageLink(this IHtmlHelper html, string imageId, string content)
         {
-            var result = $"<a href=\"/Images/{imageId}\">{content}</a>";
+            var result = $"<a href=\"/Category/Images/{imageId}\">{content}</a>";
             return new HtmlString(result);
         }
         public static HtmlString CreateProductsPageLink(this IHtmlHelper html)
