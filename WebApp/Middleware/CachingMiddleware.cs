@@ -22,6 +22,9 @@ namespace WebApp.Middleware
             _next = next;
             _configurationService = configurationService;
 
+            if (!Directory.Exists(_configurationService.CachePath))
+                Directory.CreateDirectory(_configurationService.CachePath);
+
             _timer = new Timer(EraseCache, null, TimeSpan.Zero, 
                 TimeSpan.FromSeconds(_configurationService.LifeTime));
         }

@@ -94,7 +94,7 @@ namespace WebApp
 
             app.UseMiddleware<CachingMiddleware>();
             app.UseStaticFiles();
-            app.UseNodeModules(env.ContentRootPath);
+            //app.UseNodeModules(env.ContentRootPath);
             app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
             app.ConfigureExceptionHandler(logger);
             app.UseAuthentication();
